@@ -34,10 +34,16 @@ namespace AstraLearn_API_Kel3.Model
                                 id_section = Convert.ToInt32(reader["id_section"]),
                                 id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
                                 nama_section = reader["nama_section"].ToString(),
-                                video_pembelajaran = reader["video_pembelajaran"].ToString(),
                                 modul_pembelajaran = reader["modul_pembelajaran"].ToString(),
                                 deskripsi = reader["deskripsi"].ToString(),
                             };
+
+                            // Baca data varbinary video_pembelajaran
+                            if (reader["video_pembelajaran"] != DBNull.Value)
+                            {
+                                data.video_pembelajaran = (byte[])reader["video_pembelajaran"];
+                            }
+
                             dataList.Add(data);
                         }
                     }
@@ -71,9 +77,14 @@ namespace AstraLearn_API_Kel3.Model
                             data.id_section = Convert.ToInt32(reader["id_section"]);
                             data.id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]);
                             data.nama_section = reader["nama_section"].ToString();
-                            data.video_pembelajaran = reader["video_pembelajaran"].ToString();
                             data.modul_pembelajaran = reader["modul_pembelajaran"].ToString();
                             data.deskripsi = reader["deskripsi"].ToString();
+
+                            // Baca data varbinary video_pembelajaran
+                            if (reader["video_pembelajaran"] != DBNull.Value)
+                            {
+                                data.video_pembelajaran = (byte[])reader["video_pembelajaran"];
+                            }
                         }
                     }
                 }
@@ -108,10 +119,16 @@ namespace AstraLearn_API_Kel3.Model
                                 id_section = Convert.ToInt32(reader["id_section"]),
                                 id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
                                 nama_section = reader["nama_section"].ToString(),
-                                video_pembelajaran = reader["video_pembelajaran"].ToString(),
                                 modul_pembelajaran = reader["modul_pembelajaran"].ToString(),
                                 deskripsi = reader["deskripsi"].ToString(),
                             };
+
+                            // Baca data varbinary video_pembelajaran
+                            if (reader["video_pembelajaran"] != DBNull.Value)
+                            {
+                                data.video_pembelajaran = (byte[])reader["video_pembelajaran"];
+                            }
+
                             dataList.Add(data);
                         }
                     }
