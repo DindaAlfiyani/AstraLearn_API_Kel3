@@ -21,7 +21,7 @@ namespace AstraLearn_API_Kel3.Model
             List<PelatihanModel> dataList = new List<PelatihanModel>();
             try
             {
-                string query = "select* from PelatihanView";
+                string query = "select* from tb_pelatihan WHERE status = 1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 _connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -32,9 +32,13 @@ namespace AstraLearn_API_Kel3.Model
                         id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
                         id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
                         id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]),
+                        id_sertifikat = Convert.ToInt32(reader["id_sertifikat"]),
                         nama_pelatihan = reader["nama_pelatihan"].ToString(),
+                        tanggal_mulai = Convert.ToDateTime(reader["tanggal_mulai"]),
+                        tanggal_selesai = Convert.ToDateTime(reader["tanggal_selesai"]),
                         deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
-                        nilai = Convert.ToInt32(reader["nilai"])
+                        nilai = Convert.ToInt32(reader["nilai"]),
+                        status = Convert.ToInt32(reader["status"])
                     };
                     dataList.Add(data);
                 }
@@ -92,7 +96,7 @@ namespace AstraLearn_API_Kel3.Model
             PelatihanModel data = new PelatihanModel();
             try
             {
-                string query = "select * from PelatihanView where id_pelatihan = @p1";
+                string query = "select * from tb_pelatihan where id_pelatihan = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
@@ -102,9 +106,13 @@ namespace AstraLearn_API_Kel3.Model
                     data.id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]);
                     data.id_pengguna = Convert.ToInt32(reader["id_pengguna"]);
                     data.id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]);
+                    data.id_sertifikat = Convert.ToInt32(reader["id_sertifikat"]);
                     data.nama_pelatihan = reader["nama_pelatihan"].ToString();
+                    data.tanggal_mulai = Convert.ToDateTime(reader["tanggal_mulai"]);
+                    data.tanggal_selesai = Convert.ToDateTime(reader["tanggal_selesai"]);
                     data.deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString();
                     data.nilai = Convert.ToInt32(reader["nilai"]);
+                    data.status = Convert.ToInt32(reader["status"]);
                 }
                 reader.Close();
             }
@@ -123,14 +131,18 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_pelatihan (id_pengguna, id_klasifikasi, nama_pelatihan, deskripsi_pelatihan, nilai) " +
-                               "VALUES (@p1, @p2, @p3, @p4, @p5, @p6)";
+                string query = "INSERT INTO tb_pelatihan (id_pengguna, id_klasifikasi, id_sertifikat, nama_pelatihan, tanggal_mulai, tanggal_selesai, deskripsi_pelatihan, nilai, status) " +
+                               "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
                 command.Parameters.AddWithValue("@p2", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p3", data.nama_pelatihan);
-                command.Parameters.AddWithValue("@p4", data.deskripsi_pelatihan);
-                command.Parameters.AddWithValue("@p6", data.nilai);
+                command.Parameters.AddWithValue("@p3", data.id_sertifikat);
+                command.Parameters.AddWithValue("@p4", data.nama_pelatihan);
+                command.Parameters.AddWithValue("@p5", data.tanggal_mulai);
+                command.Parameters.AddWithValue("@p6", data.tanggal_selesai);
+                command.Parameters.AddWithValue("@p7", data.deskripsi_pelatihan);
+                command.Parameters.AddWithValue("@p8", data.nilai);
+                command.Parameters.AddWithValue("@p9", 1 );
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -148,16 +160,23 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
+                data.status = 1; 
+                data.id_sertifikat = 0;
+
                 string query = "UPDATE tb_pelatihan " +
-                               "SET id_pengguna = @p2, id_klasifikasi = @p3, nama_pelatihan = @p4, deskripsi_pelatihan = @p5, jumlah_peserta = @p6 " +
+                               "SET id_pengguna = @p2, id_klasifikasi = @p3, id_klasifikasi = @p4, nama_pelatihan = @p5, tanggal_mulai = @p6, tanggal_selesai = @p7, deskripsi_pelatihan = @p8, status = @p9 " +
                                "WHERE id_pelatihan = @p1";
 
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pelatihan);
                 command.Parameters.AddWithValue("@p2", data.id_pengguna);
                 command.Parameters.AddWithValue("@p3", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p4", data.nama_pelatihan);
-                command.Parameters.AddWithValue("@p5", data.deskripsi_pelatihan);
+                command.Parameters.AddWithValue("@p4", data.id_sertifikat);
+                command.Parameters.AddWithValue("@p5", data.nama_pelatihan);
+                command.Parameters.AddWithValue("@p6", data.tanggal_mulai);
+                command.Parameters.AddWithValue("@p7", data.tanggal_selesai);
+                command.Parameters.AddWithValue("@p8", data.deskripsi_pelatihan);
+                command.Parameters.AddWithValue("@p9", data.status);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -199,19 +218,17 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "DELETE FROM tb_pelatihan WHERE id_pelatihan = @p1";
+                // Ubah data status menjadi 0 daripada menghapusnya secara fisik
+                string query = "UPDATE tb_pelatihan SET status = 0 WHERE id_pelatihan = @p1";
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
                 command.ExecuteNonQuery();
+                _connection.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                _connection.Close();
             }
         }
     }
