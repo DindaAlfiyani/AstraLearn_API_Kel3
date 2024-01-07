@@ -11,5 +11,6 @@
         public string pilgan4 { get; set; }
         public string pilgan5 { get; set; }
         public string kunci_jawaban { get; set; }
+        public int status { get; set; }
     }
 }

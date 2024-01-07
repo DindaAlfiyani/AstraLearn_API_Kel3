@@ -32,8 +32,8 @@ namespace AstraLearn_API_Kel3.Model
                     {
                         id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]),
                         nama_klasifikasi = reader["nama_klasifikasi"].ToString(),
-                        jumlah_pelatihan = Convert.ToInt32(reader["jumlah_pelatihan"]),
-                        deskripsi = reader["deskripsi"].ToString()
+                        deskripsi = reader["deskripsi"].ToString(),
+                        status = Convert.ToInt32(reader["status"])
                     };
                     dataList.Add(data);
                 }
@@ -64,8 +64,8 @@ namespace AstraLearn_API_Kel3.Model
                 {
                     data.id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]);
                     data.nama_klasifikasi = reader["nama_klasifikasi"].ToString();
-                    data.jumlah_pelatihan = Convert.ToInt32(reader["jumlah_pelatihan"]);
                     data.deskripsi = reader["deskripsi"].ToString();
+                    data.status = Convert.ToInt32(reader["status"]);
                 }
                 reader.Close();
             }
@@ -84,11 +84,11 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_klasifikasi_pelatihan (nama_klasifikasi, jumlah_pelatihan, deskripsi) VALUES (@p1, @p2, @p3)";
+                string query = "INSERT INTO tb_klasifikasi_pelatihan (nama_klasifikasi, deskripsi, status) VALUES (@p1, @p2, @p3)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.nama_klasifikasi);
-                command.Parameters.AddWithValue("@p2", data.jumlah_pelatihan);
-                command.Parameters.AddWithValue("@p3", data.deskripsi);
+                command.Parameters.AddWithValue("@p2", data.deskripsi);
+                command.Parameters.AddWithValue("@p3", 1); // Set status to 1 for new data
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -106,14 +106,18 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
+                // Jika Anda ingin status selalu menjadi 1 pada saat pembaruan
+                data.status = 1;
+
                 string query = "UPDATE tb_klasifikasi_pelatihan " +
-                               "SET nama_klasifikasi = @p2, deskripsi = @p3 " +
+                               "SET nama_klasifikasi = @p2, deskripsi = @p3, status = @p4 " +
                                "WHERE id_klasifikasi = @p1";
 
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_klasifikasi);
                 command.Parameters.AddWithValue("@p2", data.nama_klasifikasi);
                 command.Parameters.AddWithValue("@p3", data.deskripsi);
+                command.Parameters.AddWithValue("@p4", data.status);
                 _connection.Open();
                 command.ExecuteNonQuery();
                 _connection.Close();

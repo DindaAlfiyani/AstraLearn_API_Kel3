@@ -34,8 +34,6 @@ namespace AstraLearn_API_Kel3.Model
                         id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]),
                         nama_pelatihan = reader["nama_pelatihan"].ToString(),
                         deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
-                        jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
-                        nama_klasifikasi = reader["nama_klasifikasi"].ToString(),
                         nilai = Convert.ToInt32(reader["nilai"])
                     };
                     dataList.Add(data);
@@ -72,8 +70,6 @@ namespace AstraLearn_API_Kel3.Model
                         id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]),
                         nama_pelatihan = reader["nama_pelatihan"].ToString(),
                         deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
-                        jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
-                        nama_klasifikasi = reader["nama_klasifikasi"].ToString(),
                         nilai = Convert.ToInt32(reader["nilai"])
                     };
                     dataList.Add(data);
@@ -108,8 +104,6 @@ namespace AstraLearn_API_Kel3.Model
                     data.id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]);
                     data.nama_pelatihan = reader["nama_pelatihan"].ToString();
                     data.deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString();
-                    data.jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]);
-                    data.nama_klasifikasi = reader["nama_klasifikasi"].ToString();
                     data.nilai = Convert.ToInt32(reader["nilai"]);
                 }
                 reader.Close();
@@ -129,14 +123,13 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_pelatihan (id_pengguna, id_klasifikasi, nama_pelatihan, deskripsi_pelatihan, jumlah_peserta, nilai) " +
+                string query = "INSERT INTO tb_pelatihan (id_pengguna, id_klasifikasi, nama_pelatihan, deskripsi_pelatihan, nilai) " +
                                "VALUES (@p1, @p2, @p3, @p4, @p5, @p6)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
                 command.Parameters.AddWithValue("@p2", data.id_klasifikasi);
                 command.Parameters.AddWithValue("@p3", data.nama_pelatihan);
                 command.Parameters.AddWithValue("@p4", data.deskripsi_pelatihan);
-                command.Parameters.AddWithValue("@p5", data.jumlah_peserta);
                 command.Parameters.AddWithValue("@p6", data.nilai);
                 _connection.Open();
                 command.ExecuteNonQuery();
@@ -165,7 +158,6 @@ namespace AstraLearn_API_Kel3.Model
                 command.Parameters.AddWithValue("@p3", data.id_klasifikasi);
                 command.Parameters.AddWithValue("@p4", data.nama_pelatihan);
                 command.Parameters.AddWithValue("@p5", data.deskripsi_pelatihan);
-                command.Parameters.AddWithValue("@p6", data.jumlah_peserta);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }

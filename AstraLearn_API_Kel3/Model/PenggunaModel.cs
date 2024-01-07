@@ -7,8 +7,9 @@
         public string password { get; set; }
         public string nama_lengkap { get; set; }
         public string email { get; set; }
-        public string alamat { get; set; }
         public string tanggal_lahir { get; set; }
+        public string alamat { get; set; }
         public string hak_akses { get; set; }
+        public int status { get; set; }
     }
 }

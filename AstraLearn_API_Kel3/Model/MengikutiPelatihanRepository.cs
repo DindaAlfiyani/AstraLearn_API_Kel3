@@ -29,12 +29,9 @@ namespace AstraLearn_API_Kel3.Model
                 {
                     MengikutiPelatihanModel data = new MengikutiPelatihanModel
                     {
-                        id_mengikuti = Convert.ToInt32(reader["id_mengikuti"]),
                         id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
                         id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
-                        riwayat_section = Convert.ToInt32(reader["riwayat_section"]),
-                        riwayat_nilai = Convert.ToInt32(reader["riwayat_nilai"]),
-                        rating = Convert.ToSingle(reader["rating"])
+                        riwayat_section = Convert.ToInt32(reader["riwayat_section"])
                     };
                     dataList.Add(data);
                 }
@@ -64,12 +61,9 @@ namespace AstraLearn_API_Kel3.Model
                 SqlDataReader reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    data.id_mengikuti = Convert.ToInt32(reader["id_mengikuti"]);
                     data.id_pengguna = Convert.ToInt32(reader["id_pengguna"]);
                     data.id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]);
                     data.riwayat_section = Convert.ToInt32(reader["riwayat_section"]);
-                    data.riwayat_nilai = Convert.ToInt32(reader["riwayat_nilai"]);
-                    data.rating = Convert.ToSingle(reader["rating"]);
                 }
                 reader.Close();
             }
@@ -88,14 +82,12 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_mengikuti_pelatihan (id_pengguna, id_pelatihan, riwayat_section, riwayat_nilai, rating) " +
+                string query = "INSERT INTO tb_mengikuti_pelatihan (id_pengguna, id_pelatihan, riwayat_section) " +
                                "VALUES (@p1, @p2, @p3, @p4, @p5)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
                 command.Parameters.AddWithValue("@p2", data.id_pelatihan);
                 command.Parameters.AddWithValue("@p3", data.riwayat_section);
-                command.Parameters.AddWithValue("@p4", data.riwayat_nilai);
-                command.Parameters.AddWithValue("@p5", data.rating);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
