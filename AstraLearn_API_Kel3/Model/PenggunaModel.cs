@@ -10,6 +10,5 @@
         public string tanggal_lahir { get; set; }
         public string alamat { get; set; }
         public string hak_akses { get; set; }
-        public int status { get; set; }
     }
 }
