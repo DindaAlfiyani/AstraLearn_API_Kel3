@@ -22,7 +22,7 @@ namespace AstraLearn_API_Kel3.Model
             List<KlasifikasiPelatihanModel> dataList = new List<KlasifikasiPelatihanModel>();
             try
             {
-                string query = "SELECT * FROM tb_klasifikasi_pelatihan";
+                string query = "SELECT * FROM tb_klasifikasi_pelatihan WHERE status = 1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 _connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -49,6 +49,7 @@ namespace AstraLearn_API_Kel3.Model
             }
             return dataList;
         }
+
 
         public KlasifikasiPelatihanModel GetData(int id)
         {
@@ -132,7 +133,8 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "DELETE FROM tb_klasifikasi_pelatihan WHERE id_klasifikasi = @p1";
+                // Ubah data status menjadi 0 daripada menghapusnya secara fisik
+                string query = "UPDATE tb_klasifikasi_pelatihan SET status = 0 WHERE id_klasifikasi = @p1";
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
