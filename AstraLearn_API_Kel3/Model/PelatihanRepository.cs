@@ -60,7 +60,7 @@ namespace AstraLearn_API_Kel3.Model
             List<PelatihanModel> dataList = new List<PelatihanModel>();
             try
             {
-                string query = "select* from View_Pelatihan WHERE id_pengguna = @p1";
+                string query = "select* from tb_pelatihan WHERE id_pengguna = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();

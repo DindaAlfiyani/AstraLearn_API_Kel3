@@ -21,7 +21,7 @@ namespace AstraLearn_API_Kel3.Model
             List<SectionModel> dataList = new List<SectionModel>();
             try
             {
-                string query = "SELECT * FROM tb_section";
+                string query = "SELECT * FROM tb_section Where status = 1";
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {
                     _connection.Open();
@@ -36,6 +36,7 @@ namespace AstraLearn_API_Kel3.Model
                                 nama_section = reader["nama_section"].ToString(),
                                 modul_pembelajaran = reader["modul_pembelajaran"].ToString(),
                                 deskripsi = reader["deskripsi"].ToString(),
+                                status = Convert.ToInt32(reader["status"]),
                             };
 
                             // Baca data varbinary video_pembelajaran
@@ -79,6 +80,7 @@ namespace AstraLearn_API_Kel3.Model
                             data.nama_section = reader["nama_section"].ToString();
                             data.modul_pembelajaran = reader["modul_pembelajaran"].ToString();
                             data.deskripsi = reader["deskripsi"].ToString();
+                            data.status = Convert.ToInt32(reader["status"]);
 
                             // Baca data varbinary video_pembelajaran
                             if (reader["video_pembelajaran"] != DBNull.Value)
@@ -121,6 +123,7 @@ namespace AstraLearn_API_Kel3.Model
                                 nama_section = reader["nama_section"].ToString(),
                                 modul_pembelajaran = reader["modul_pembelajaran"].ToString(),
                                 deskripsi = reader["deskripsi"].ToString(),
+                                status = Convert.ToInt32(reader["status"]),
                             };
 
                             // Baca data varbinary video_pembelajaran
@@ -150,8 +153,8 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_section (id_pelatihan, nama_section, video_pembelajaran, modul_pembelajaran, deskripsi) " +
-                               "VALUES (@p1, @p2, @p3, @p4, @p5)";
+                string query = "INSERT INTO tb_section (id_pelatihan, nama_section, video_pembelajaran, modul_pembelajaran, deskripsi, status) " +
+                               "VALUES (@p1, @p2, @p3, @p4, @p5, @p6)";
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {
                     command.Parameters.AddWithValue("@p1", data.id_pelatihan);
@@ -159,6 +162,7 @@ namespace AstraLearn_API_Kel3.Model
                     command.Parameters.AddWithValue("@p3", data.video_pembelajaran);
                     command.Parameters.AddWithValue("@p4", data.modul_pembelajaran);
                     command.Parameters.AddWithValue("@p5", data.deskripsi);
+                    command.Parameters.AddWithValue("@p5", 1);
                     _connection.Open();
                     command.ExecuteNonQuery();
                 }
@@ -177,7 +181,7 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "DELETE FROM tb_section WHERE id_section = @p1";
+                string query = "DELETE FROM tb_section SET status = 0 WHERE id_section = @p1";
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {
                     command.Parameters.AddWithValue("@p1", id);
@@ -199,7 +203,9 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "UPDATE tb_section SET id_pelatihan = @p2, nama_section = @p3, video_pembelajaran = @p4, modul_pembelajaran = @p5, deskripsi = @p6 WHERE id_section = @p1";
+                data.status = 1;
+
+                string query = "UPDATE tb_section SET id_pelatihan = @p2, nama_section = @p3, video_pembelajaran = @p4, modul_pembelajaran = @p5, deskripsi = @p6 , status = p@7 WHERE id_section = @p1";
 
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {
@@ -209,6 +215,7 @@ namespace AstraLearn_API_Kel3.Model
                     command.Parameters.AddWithValue("@p4", data.video_pembelajaran);
                     command.Parameters.AddWithValue("@p5", data.modul_pembelajaran);
                     command.Parameters.AddWithValue("@p6", data.deskripsi);
+                    command.Parameters.AddWithValue("@p7", data.status);
                     _connection.Open();
                     command.ExecuteNonQuery();
                 }
