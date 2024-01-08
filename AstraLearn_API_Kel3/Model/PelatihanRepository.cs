@@ -60,7 +60,7 @@ namespace AstraLearn_API_Kel3.Model
             List<PelatihanModel> dataList = new List<PelatihanModel>();
             try
             {
-                string query = "select* from PelatihanView WHERE id_pengguna = @p1";
+                string query = "select* from View_Pelatihan WHERE id_pengguna = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
@@ -135,8 +135,8 @@ namespace AstraLearn_API_Kel3.Model
                                "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
-                command.Parameters.AddWithValue("@p2", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p3", data.id_sertifikat);
+                command.Parameters.AddWithValue("@p2", data.id_sertifikat);
+                command.Parameters.AddWithValue("@p3", data.id_klasifikasi);
                 command.Parameters.AddWithValue("@p4", data.nama_pelatihan);
                 command.Parameters.AddWithValue("@p5", data.tanggal_mulai);
                 command.Parameters.AddWithValue("@p6", data.tanggal_selesai);
@@ -161,22 +161,22 @@ namespace AstraLearn_API_Kel3.Model
             try
             {
                 data.status = 1; 
-                data.id_sertifikat = 0;
 
                 string query = "UPDATE tb_pelatihan " +
-                               "SET id_pengguna = @p2, id_klasifikasi = @p3, id_klasifikasi = @p4, nama_pelatihan = @p5, tanggal_mulai = @p6, tanggal_selesai = @p7, deskripsi_pelatihan = @p8, status = @p9 " +
+                               "SET id_pengguna = @p2, id_klasifikasi = @p3, id_sertifikat = @p4, nama_pelatihan = @p5, tanggal_mulai = @p6, tanggal_selesai = @p7, deskripsi_pelatihan = @p8, nilai = @p9, status = @p10 " +
                                "WHERE id_pelatihan = @p1";
 
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pelatihan);
                 command.Parameters.AddWithValue("@p2", data.id_pengguna);
                 command.Parameters.AddWithValue("@p3", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p4", data.id_sertifikat);
+                command.Parameters.AddWithValue("@p4", null);
                 command.Parameters.AddWithValue("@p5", data.nama_pelatihan);
-                command.Parameters.AddWithValue("@p6", data.tanggal_mulai);
-                command.Parameters.AddWithValue("@p7", data.tanggal_selesai);
+                command.Parameters.AddWithValue("@p6", null);
+                command.Parameters.AddWithValue("@p7", null);
                 command.Parameters.AddWithValue("@p8", data.deskripsi_pelatihan);
-                command.Parameters.AddWithValue("@p9", data.status);
+                command.Parameters.AddWithValue("@p9", null);
+                command.Parameters.AddWithValue("@p10", data.status);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }

@@ -1,29 +1,28 @@
 ﻿using AstraLearn_API_Kel3.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
 
 namespace AstraLearn_API_Kel3.Controllers
 {
     [ApiController]
-    public class SoalExerciseController : ControllerBase
+    public class DetailExamController : ControllerBase
     {
-        private readonly SoalExerciseRepository _soalExerciseRepository;
+        private readonly DetailExamRepository _DetailExamRepository;
 
-        public SoalExerciseController(IConfiguration configuration)
+        public DetailExamController(IConfiguration configuration)
         {
-            _soalExerciseRepository = new SoalExerciseRepository(configuration);
+            _DetailExamRepository = new DetailExamRepository(configuration);
         }
 
-        [HttpGet("[controller]/GetAllSoalExercises")]
-        public ActionResult<ResponseModel> GetAllSoalExercises()
+        [HttpGet("[controller]/GetAllDetailExam")]
+        public ActionResult<ResponseModel> GetAllDetail(int id)
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
                 responseModel.message = "Berhasil";
                 responseModel.status = 200;
-                responseModel.data = _soalExerciseRepository.GetAllData();
+                responseModel.data = _DetailExamRepository.GetAllData();
             }
             catch (Exception ex)
             {
@@ -33,15 +32,15 @@ namespace AstraLearn_API_Kel3.Controllers
             return Ok(responseModel);
         }
 
-        [HttpGet("[controller]/GetSoalExercise")]
-        public ActionResult<ResponseModel> GetSoalExercise(int id)
+        [HttpGet("[controller]/GetDetailExam")]
+        public ActionResult<ResponseModel> GetExam(int id)
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
                 responseModel.message = "Berhasil";
                 responseModel.status = 200;
-                responseModel.data = _soalExerciseRepository.GetData(id);
+                responseModel.data = _DetailExamRepository.GetData(id);
             }
             catch (Exception ex)
             {
@@ -51,13 +50,13 @@ namespace AstraLearn_API_Kel3.Controllers
             return Ok(responseModel);
         }
 
-        [HttpPost("[controller]/InsertSoalExercise")]
-        public ActionResult<ResponseModel> InsertSoalExercise([FromBody] SoalExerciseModel soalExerciseModel)
+        [HttpPost("[controller]/InsertDetailExam")]
+        public ActionResult<ResponseModel> InsertDetailExam([FromBody] DetailExamModel DetailExamModel)
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
-                _soalExerciseRepository.InsertData(soalExerciseModel);
+                _DetailExamRepository.InsertData(DetailExamModel);
                 responseModel.message = "Data berhasil ditambahkan";
                 responseModel.status = 200;
             }
@@ -69,13 +68,13 @@ namespace AstraLearn_API_Kel3.Controllers
             return Ok(responseModel);
         }
 
-        [HttpPost("[controller]/UpdateSoalExercise")]
-        public ActionResult<ResponseModel> UpdateSoalExercise([FromBody] SoalExerciseModel soalExerciseModel)
+        [HttpPost("[controller]/UpdateDetailExam")]
+        public ActionResult<ResponseModel> UpdateDetailExam([FromBody] DetailExamModel DetailExamModel)
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
-                _soalExerciseRepository.UpdateData(soalExerciseModel);
+                _DetailExamRepository.UpdateData(DetailExamModel);
                 responseModel.message = "Data berhasil diupdate";
                 responseModel.status = 200;
             }
@@ -87,13 +86,13 @@ namespace AstraLearn_API_Kel3.Controllers
             return Ok(responseModel);
         }
 
-        [HttpPost("[controller]/DeleteSoalExercise")]
-        public ActionResult<ResponseModel> DeleteSoalExercise(int id)
+        [HttpPost("[controller]/DeleteDetailExam")]
+        public ActionResult<ResponseModel> DeleteDetailExam(int id)
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
-                _soalExerciseRepository.DeleteData(id);
+                _DetailExamRepository.DeleteData(id);
                 responseModel.message = "Data berhasil dihapus";
                 responseModel.status = 200;
             }

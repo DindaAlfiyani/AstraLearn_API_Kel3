@@ -21,7 +21,7 @@ namespace AstraLearn_API_Kel3.Model
             List<ExamModel> dataList = new List<ExamModel>();
             try
             {
-                string query = "SELECT * FROM tb_exam WHERE id_pelatihan = @p1";
+                string query = "SELECT * FROM tb_soal_exam WHERE id_pelatihan = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", trainingId);
                 _connection.Open();
@@ -60,7 +60,7 @@ namespace AstraLearn_API_Kel3.Model
             ExamModel data = new ExamModel();
             try
             {
-                string query = "SELECT * FROM tb_exam WHERE id_exam = @p1";
+                string query = "SELECT * FROM tb_soal_exam WHERE id_exam = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
@@ -94,7 +94,7 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_exam (id_pelatihan, soal, pilgan1, pilgan2, pilgan3, pilgan4, pilgan5, kunci_jawaban) " +
+                string query = "INSERT INTO tb_soal_exam (id_pelatihan, soal, pilgan1, pilgan2, pilgan3, pilgan4, pilgan5, kunci_jawaban) " +
                                "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pelatihan);
@@ -122,7 +122,7 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "UPDATE tb_exam " +
+                string query = "UPDATE tb_soal_exam " +
                                "SET id_pelatihan = @p2, soal = @p3, pilgan1 = @p4, pilgan2 = @p5, pilgan3 = @p6, pilgan4 = @p7, pilgan5 = @p8, kunci_jawaban = @p9 " +
                                "WHERE id_exam = @p1";
 
@@ -153,7 +153,7 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "DELETE FROM tb_exam WHERE id_exam = @p1";
+                string query = "DELETE FROM tb_soal_exam WHERE id_exam = @p1";
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
