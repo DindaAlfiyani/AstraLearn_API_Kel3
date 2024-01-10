@@ -41,6 +41,7 @@ namespace AstraLearn_API_Kel3.Model
                         pilgan4 = Convert.ToString(reader["pilgan4"]),
                         pilgan5 = Convert.ToString(reader["pilgan5"]),
                         kunci_jawaban = Convert.ToString(reader["kunci_jawaban"]),
+                        status = Convert.ToInt32(reader["status"]),
                     };
                     dataList.Add(data);
                 }
@@ -78,6 +79,7 @@ namespace AstraLearn_API_Kel3.Model
                     data.pilgan4 = Convert.ToString(reader["pilgan4"]);
                     data.pilgan5 = Convert.ToString(reader["pilgan5"]);
                     data.kunci_jawaban = Convert.ToString(reader["kunci_jawaban"]);
+                    data.status  = Convert.ToInt32(reader["status"]);
                 }
                 reader.Close();
             }
@@ -96,8 +98,8 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_exercise (id_section, soal, pilgan1, pilgan2, pilgan3, pilgan4, pilgan5, kunci_jawaban) " +
-                               "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8)";
+                string query = "INSERT INTO tb_exercise (id_section, soal, pilgan1, pilgan2, pilgan3, pilgan4, pilgan5, kunci_jawaban,status) " +
+                               "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_section);
                 command.Parameters.AddWithValue("@p2", data.soal);
@@ -107,6 +109,8 @@ namespace AstraLearn_API_Kel3.Model
                 command.Parameters.AddWithValue("@p6", data.pilgan4);
                 command.Parameters.AddWithValue("@p7", data.pilgan5);
                 command.Parameters.AddWithValue("@p8", data.kunci_jawaban);
+                command.Parameters.AddWithValue("@p9", 1); // Set status to 1 for new data
+
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -138,6 +142,7 @@ namespace AstraLearn_API_Kel3.Model
                 command.Parameters.AddWithValue("@p7", data.pilgan4);
                 command.Parameters.AddWithValue("@p8", data.pilgan5);
                 command.Parameters.AddWithValue("@p9", data.kunci_jawaban);
+                command.Parameters.AddWithValue("@p10", data.status);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -155,7 +160,7 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "DELETE FROM tb_exercise WHERE id_exercise = @p1";
+                string query = "UPDATE tb_soal_exercise set status = 0 where id_exercise = @p1";
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
@@ -169,6 +174,11 @@ namespace AstraLearn_API_Kel3.Model
             {
                 _connection.Close();
             }
+        }
+
+        internal object GetAllData()
+        {
+            throw new NotImplementedException();
         }
     }
 }

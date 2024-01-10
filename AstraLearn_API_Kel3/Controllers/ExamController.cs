@@ -15,25 +15,25 @@ namespace AstraLearn_API_Kel3.Controllers
         }
 
         [HttpGet("[controller]/GetAllExams")]
-        public ActionResult<ResponseModel> GetAllExams(int id)
+        public ResponseModel GetAllExam()
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
                 responseModel.message = "Berhasil";
                 responseModel.status = 200;
-                responseModel.data = _examRepository.GetAllData(id);
+                responseModel.data = _examRepository.GetAllData();
             }
             catch (Exception ex)
             {
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
 
         [HttpGet("[controller]/GetExam")]
-        public ActionResult<ResponseModel> GetExam(int id)
+        public ResponseModel GetExam(int id)
         {
             ResponseModel responseModel = new ResponseModel();
             try
@@ -47,11 +47,11 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
 
         [HttpPost("[controller]/InsertExam")]
-        public ActionResult<ResponseModel> InsertExam([FromBody] ExamModel examModel)
+        public ResponseModel InsertExam([FromBody] ExamModel examModel)
         {
             ResponseModel responseModel = new ResponseModel();
             try
@@ -65,11 +65,11 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
 
         [HttpPost("[controller]/UpdateExam")]
-        public ActionResult<ResponseModel> UpdateExam([FromBody] ExamModel examModel)
+        public ResponseModel UpdateExam([FromBody] ExamModel examModel)
         {
             ResponseModel responseModel = new ResponseModel();
             try
@@ -83,11 +83,11 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
 
         [HttpPost("[controller]/DeleteExam")]
-        public ActionResult<ResponseModel> DeleteExam(int id)
+        public ResponseModel DeleteExam(int id)
         {
             ResponseModel responseModel = new ResponseModel();
             try
@@ -101,7 +101,7 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
     }
 }
