@@ -173,5 +173,9 @@ namespace AstraLearn_API_Kel3.Model
             }
         }
 
+        internal object GetAllData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

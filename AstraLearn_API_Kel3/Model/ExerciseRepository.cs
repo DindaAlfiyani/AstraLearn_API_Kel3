@@ -175,5 +175,10 @@ namespace AstraLearn_API_Kel3.Model
                 _connection.Close();
             }
         }
+
+        internal object GetAllData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

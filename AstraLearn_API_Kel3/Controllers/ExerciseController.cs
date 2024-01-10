@@ -16,25 +16,25 @@ namespace AstraLearn_API_Kel3.Controllers
         }
 
         [HttpGet("[controller]/GetAllExercises")]
-        public ActionResult<ResponseModel> GetAllExercises(int id)
+        public ResponseModel GetAllExercises()
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
                 responseModel.message = "Berhasil";
                 responseModel.status = 200;
-                responseModel.data = _exerciseRepository.GetAllData(id);
+                responseModel.data = _exerciseRepository.GetAllData();
             }
             catch (Exception ex)
             {
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
 
         [HttpGet("[controller]/GetExercise")]
-        public ActionResult<ResponseModel> GetExercise(int id)
+        public ResponseModel GetExercise(int id)
         {
             ResponseModel responseModel = new ResponseModel();
             try
@@ -48,11 +48,11 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
 
         [HttpPost("[controller]/InsertExercise")]
-        public ActionResult<ResponseModel> InsertExercise([FromBody] ExerciseModel exerciseModel)
+        public ResponseModel InsertExercise([FromBody] ExerciseModel exerciseModel)
         {
             ResponseModel responseModel = new ResponseModel();
             try
@@ -66,11 +66,11 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
 
         [HttpPost("[controller]/UpdateExercise")]
-        public ActionResult<ResponseModel> UpdateExercise([FromBody] ExerciseModel exerciseModel)
+        public ResponseModel UpdateExercise([FromBody] ExerciseModel exerciseModel)
         {
             ResponseModel responseModel = new ResponseModel();
             try
@@ -84,11 +84,11 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
 
         [HttpPost("[controller]/DeleteExercise")]
-        public ActionResult<ResponseModel> DeleteExercise(int id)
+        public ResponseModel DeleteExercise(int id)
         {
             ResponseModel responseModel = new ResponseModel();
             try
@@ -102,7 +102,7 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return Ok(responseModel);
+            return responseModel;
         }
     }
 }
