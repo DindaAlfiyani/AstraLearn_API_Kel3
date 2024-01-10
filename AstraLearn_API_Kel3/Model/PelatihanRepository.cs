@@ -16,7 +16,7 @@ namespace AstraLearn_API_Kel3.Model
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<PelatihanModel> GetAllData()
+     /*   public List<PelatihanModel> GetAllData()
         {
             List<PelatihanModel> dataList = new List<PelatihanModel>();
             try
@@ -53,14 +53,49 @@ namespace AstraLearn_API_Kel3.Model
                 _connection.Close();
             }
             return dataList;
+        }*/
+        public List<PelatihanModel> GetAllData()
+        {
+            List<PelatihanModel> dataList = new List<PelatihanModel>();
+            try
+            {
+                string query = "select* from PelatihanView";
+                SqlCommand command = new SqlCommand(query, _connection);
+                _connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    PelatihanModel data = new PelatihanModel
+                    {
+                        id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
+                        id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
+                        id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]),
+                        nama_pelatihan = reader["nama_pelatihan"].ToString(),
+                        deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
+                        jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
+                        nama_klasifikasi = reader["nama_klasifikasi"].ToString(),
+                        nilai = Convert.ToInt32(reader["nilai"])
+                    };
+                    dataList.Add(data);
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+            return dataList;
         }
-
         public List<PelatihanModel> GetAllData2(int id)
         {
             List<PelatihanModel> dataList = new List<PelatihanModel>();
             try
             {
-                string query = "select* from tb_pelatihan WHERE id_pengguna = @p1";
+                string query = "select* from PelatihanView WHERE id_pengguna = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
@@ -74,6 +109,7 @@ namespace AstraLearn_API_Kel3.Model
                         id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]),
                         nama_pelatihan = reader["nama_pelatihan"].ToString(),
                         deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
+                        jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
                         nilai = Convert.ToInt32(reader["nilai"])
                     };
                     dataList.Add(data);
@@ -96,7 +132,7 @@ namespace AstraLearn_API_Kel3.Model
             PelatihanModel data = new PelatihanModel();
             try
             {
-                string query = "select * from tb_pelatihan where id_pelatihan = @p1";
+                string query = "select * from PelatihanView where id_pelatihan = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
@@ -106,13 +142,10 @@ namespace AstraLearn_API_Kel3.Model
                     data.id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]);
                     data.id_pengguna = Convert.ToInt32(reader["id_pengguna"]);
                     data.id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]);
-                    data.id_sertifikat = Convert.ToInt32(reader["id_sertifikat"]);
                     data.nama_pelatihan = reader["nama_pelatihan"].ToString();
-                    data.tanggal_mulai = Convert.ToDateTime(reader["tanggal_mulai"]);
-                    data.tanggal_selesai = Convert.ToDateTime(reader["tanggal_selesai"]);
                     data.deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString();
+                    data.jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]);
                     data.nilai = Convert.ToInt32(reader["nilai"]);
-                    data.status = Convert.ToInt32(reader["status"]);
                 }
                 reader.Close();
             }
@@ -135,8 +168,8 @@ namespace AstraLearn_API_Kel3.Model
                                "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
-                command.Parameters.AddWithValue("@p2", data.id_sertifikat);
                 command.Parameters.AddWithValue("@p3", data.id_klasifikasi);
+                command.Parameters.AddWithValue("@p2", data.id_sertifikat);
                 command.Parameters.AddWithValue("@p4", data.nama_pelatihan);
                 command.Parameters.AddWithValue("@p5", data.tanggal_mulai);
                 command.Parameters.AddWithValue("@p6", data.tanggal_selesai);
@@ -170,12 +203,12 @@ namespace AstraLearn_API_Kel3.Model
                 command.Parameters.AddWithValue("@p1", data.id_pelatihan);
                 command.Parameters.AddWithValue("@p2", data.id_pengguna);
                 command.Parameters.AddWithValue("@p3", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p4", null);
+                command.Parameters.AddWithValue("@p4", data.id_sertifikat);
                 command.Parameters.AddWithValue("@p5", data.nama_pelatihan);
-                command.Parameters.AddWithValue("@p6", null);
-                command.Parameters.AddWithValue("@p7", null);
+                command.Parameters.AddWithValue("@p6", data.tanggal_mulai);
+                command.Parameters.AddWithValue("@p7", data.tanggal_selesai);
                 command.Parameters.AddWithValue("@p8", data.deskripsi_pelatihan);
-                command.Parameters.AddWithValue("@p9", null);
+                command.Parameters.AddWithValue("@p9", data.nilai);
                 command.Parameters.AddWithValue("@p10", data.status);
                 _connection.Open();
                 command.ExecuteNonQuery();

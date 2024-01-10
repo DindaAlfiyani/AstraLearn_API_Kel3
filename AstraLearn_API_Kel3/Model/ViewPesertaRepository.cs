@@ -25,15 +25,21 @@ namespace AstraLearn_API_Kel3.Model
                                     tb_pengguna.nama_lengkap AS nama_pengguna,
                                     tb_pelatihan.nama_pelatihan,
                                     tb_mengikuti_pelatihan.riwayat_section,
+                                    COUNT(tb_section.id_section) AS jumlah_section,
                                     CASE 
-                                        WHEN tb_mengikuti_pelatihan.riwayat_section = tb_pelatihan.jumlah_section + 1THEN 'Selesai'
+                                        WHEN tb_mengikuti_pelatihan.riwayat_section = COUNT(tb_section.id_section) + 1 THEN 'Selesai'
                                         ELSE 'Belum Selesai'
                                     END AS status,
-                                    ((CAST(tb_mengikuti_pelatihan.riwayat_section AS FLOAT) / (tb_pelatihan.jumlah_section + 1)) * 100) AS presentase
+                                    ((CAST(tb_mengikuti_pelatihan.riwayat_section AS FLOAT) / (COUNT(tb_section.id_section) + 1)) * 100) AS presentase
                                 FROM
                                     tb_mengikuti_pelatihan
                                     JOIN tb_pengguna ON tb_mengikuti_pelatihan.id_pengguna = tb_pengguna.id_pengguna
-                                    JOIN tb_pelatihan ON tb_mengikuti_pelatihan.id_pelatihan = tb_pelatihan.id_pelatihan";
+                                    JOIN tb_pelatihan ON tb_mengikuti_pelatihan.id_pelatihan = tb_pelatihan.id_pelatihan
+                                    JOIN tb_section ON tb_pelatihan.id_pelatihan = tb_section.id_pelatihan
+                                GROUP BY
+                                    tb_pengguna.nama_lengkap,
+                                    tb_pelatihan.nama_pelatihan,
+                                    tb_mengikuti_pelatihan.riwayat_section";
 
                 SqlCommand command = new SqlCommand(query, _connection);
                 _connection.Open();
