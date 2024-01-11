@@ -23,7 +23,7 @@ namespace AstraLearn_API_Kel3.Model
             List<ExerciseModel> dataList = new List<ExerciseModel>();
             try
             {
-                string query = "SELECT * FROM tb_exercise WHERE id_section = @p1";
+                string query = "SELECT * FROM tb_soal_exercise WHERE id_section = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", sectionId);
                 _connection.Open();
@@ -63,7 +63,7 @@ namespace AstraLearn_API_Kel3.Model
             ExerciseModel data = new ExerciseModel();
             try
             {
-                string query = "SELECT * FROM tb_exercise WHERE id_exercise = @p1";
+                string query = "SELECT * FROM tb_soal_exercise WHERE id_exercise = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
@@ -98,7 +98,7 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_exercise (id_section, soal, pilgan1, pilgan2, pilgan3, pilgan4, pilgan5, kunci_jawaban,status) " +
+                string query = "INSERT INTO tb_soal_exercise (id_section, soal, pilgan1, pilgan2, pilgan3, pilgan4, pilgan5, kunci_jawaban,status) " +
                                "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_section);
@@ -128,7 +128,7 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "UPDATE tb_exercise " +
+                string query = "UPDATE tb_soal_exercise " +
                                "SET id_section = @p2, soal = @p3, pilgan1 = @p4, pilgan2 = @p5, pilgan3 = @p6, pilgan4 = @p7, pilgan5 = @p8, kunci_jawaban = @p9 " +
                                "WHERE id_exercise = @p1";
 
