@@ -50,6 +50,24 @@ namespace AstraLearn_API_Kel3.Controllers
             return responseModel;
         }
 
+        [HttpGet("[controller]/GetPenggunaUsername")]
+        public ResponseModel GetPenggunaUsername(string username)
+        {
+            ResponseModel responseModel = new ResponseModel();
+            try
+            {
+                responseModel.message = "Berhasil";
+                responseModel.status = 200;
+                responseModel.data = _penggunaRepository.GetUser(username);
+            }
+            catch (Exception ex)
+            {
+                responseModel.message = ex.Message;
+                responseModel.status = 500;
+            }
+            return responseModel;
+        }
+
         [HttpPost("[controller]/InsertPengguna")]
         public ResponseModel InsertPengguna([FromBody] PenggunaModel penggunaModel)
         {

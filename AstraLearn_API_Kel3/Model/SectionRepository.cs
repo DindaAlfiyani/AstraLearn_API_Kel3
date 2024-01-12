@@ -37,16 +37,11 @@ namespace AstraLearn_API_Kel3.Model
                                 id_section = Convert.ToInt32(reader["id_section"]),
                                 id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
                                 nama_section = reader["nama_section"].ToString(),
+                                video_pembelajaran = reader["video_pembelajaran"].ToString(),
                                 modul_pembelajaran = reader["modul_pembelajaran"].ToString(),
                                 deskripsi = reader["deskripsi"].ToString(),
                                 status = Convert.ToInt32(reader["status"]),
                             };
-
-                            // Baca data varbinary video_pembelajaran
-                            if (reader["video_pembelajaran"] != DBNull.Value)
-                            {
-                                data.video_pembelajaran = (byte[])reader["video_pembelajaran"];
-                            }
 
                             dataList.Add(data);
                         }
@@ -81,15 +76,11 @@ namespace AstraLearn_API_Kel3.Model
                             data.id_section = Convert.ToInt32(reader["id_section"]);
                             data.id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]);
                             data.nama_section = reader["nama_section"].ToString();
+                            data.video_pembelajaran = reader["video_pembelajaran"].ToString();
                             data.modul_pembelajaran = reader["modul_pembelajaran"].ToString();
                             data.deskripsi = reader["deskripsi"].ToString();
                             data.status = Convert.ToInt32(reader["status"]);
 
-                            // Baca data varbinary video_pembelajaran
-                            if (reader["video_pembelajaran"] != DBNull.Value)
-                            {
-                                data.video_pembelajaran = (byte[])reader["video_pembelajaran"];
-                            }
                         }
                     }
                 }
@@ -124,17 +115,11 @@ namespace AstraLearn_API_Kel3.Model
                                 id_section = Convert.ToInt32(reader["id_section"]),
                                 id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
                                 nama_section = reader["nama_section"].ToString(),
+                                video_pembelajaran = reader["video_pembelajaran"].ToString(),
                                 modul_pembelajaran = reader["modul_pembelajaran"].ToString(),
                                 deskripsi = reader["deskripsi"].ToString(),
                                 status = Convert.ToInt32(reader["status"]),
                             };
-
-                            // Baca data varbinary video_pembelajaran
-                            if (reader["video_pembelajaran"] != DBNull.Value)
-                            {
-                                data.video_pembelajaran = (byte[])reader["video_pembelajaran"];
-                            }
-
                             dataList.Add(data);
                         }
                     }
@@ -156,33 +141,46 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_section (id_pelatihan, nama_section, video_pembelajaran, modul_pembelajaran, deskripsi, status) " +
+                string query = "INSERT INTO [tb_section] (id_pelatihan, nama_section, video_pembelajaran, modul_pembelajaran, deskripsi, status) " +
                                "VALUES (@p1, @p2, @p3, @p4, @p5, @p6)";
+                SqlCommand command = new SqlCommand(query, _connection);
+                command.Parameters.AddWithValue("@p1", data.id_pelatihan);
+                command.Parameters.AddWithValue("@p2", data.nama_section);
+                command.Parameters.AddWithValue("@p3", GetFileBytes(data.video_pembelajaran)); // Assuming video_pembelajaran is a file path
+                command.Parameters.AddWithValue("@p4", data.modul_pembelajaran);
+                command.Parameters.AddWithValue("@p5", data.deskripsi);
+                command.Parameters.AddWithValue("@p6", 1); // Assuming status is supposed to be @p6
 
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-
-                    command.Parameters.AddWithValue("@p1", data.id_pelatihan);
-                    command.Parameters.AddWithValue("@p2", data.nama_section);
-
-                    // Convert MP4 file to byte array
-                  /*  byte[] videoBytes = File.ReadAllBytes(data.video_pembelajaran);
-                    command.Parameters.Add("@p3", SqlDbType.VarBinary).Value = videoBytes;
-*/
-                    command.Parameters.AddWithValue("@p4", data.modul_pembelajaran);
-                    command.Parameters.AddWithValue("@p5", data.deskripsi);
-                    command.Parameters.AddWithValue("@p6", 1); // Assuming status is supposed to be @p6
-
-                    command.ExecuteNonQuery();
-                }
+                _connection.Open();
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+            finally
+            {
+                _connection.Close();
+            }
         }
+
+        // Helper method to convert file content to byte array
+        private byte[] GetFileBytes(string filePath)
+        {
+            try
+            {
+                // Read the file content into a byte array
+                byte[] fileBytes = File.ReadAllBytes(filePath);
+                return fileBytes;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading file: {ex.Message}");
+                return null;
+            }
+        }
+
+
 
         public void DeleteData(int id)
         {

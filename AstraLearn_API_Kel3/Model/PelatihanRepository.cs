@@ -168,8 +168,8 @@ namespace AstraLearn_API_Kel3.Model
                                "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
-                command.Parameters.AddWithValue("@p3", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p2", data.id_sertifikat);
+                command.Parameters.AddWithValue("@p2", data.id_klasifikasi);
+                command.Parameters.AddWithValue("@p3", data.id_sertifikat);
                 command.Parameters.AddWithValue("@p4", data.nama_pelatihan);
                 command.Parameters.AddWithValue("@p5", data.tanggal_mulai);
                 command.Parameters.AddWithValue("@p6", data.tanggal_selesai);

@@ -134,7 +134,7 @@ namespace AstraLearn_API_Kel3.Controllers
                 if (file != null && file.Length > 0)
                 {
                     var fileName = Path.GetFileName(file.FileName);
-                    var filePath = Path.Combine("E:\\AstraLearn\\AstraLearn\\wwwroot\\assets\\Upload", fileName); // Sesuaikan dengan direktori yang diinginkan
+                    var filePath = Path.Combine("D:\\SEMESTER 3\\PRG 4\\project astralearn\\SystemAstraLearn_Kelompok3\\SystemAstraLearn_Kelompok3\\wwwroot\\assets\\Upload", fileName); // Sesuaikan dengan direktori yang diinginkan
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
@@ -153,5 +153,6 @@ namespace AstraLearn_API_Kel3.Controllers
                 return new JsonResult(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
+
     }
 }
