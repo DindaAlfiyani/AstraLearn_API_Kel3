@@ -141,12 +141,12 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO [tb_section] (id_pelatihan, nama_section, video_pembelajaran, modul_pembelajaran, deskripsi, status) " +
+                string query = "INSERT INTO tb_section (id_pelatihan, nama_section, video_pembelajaran, modul_pembelajaran, deskripsi, status) " +
                                "VALUES (@p1, @p2, @p3, @p4, @p5, @p6)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pelatihan);
                 command.Parameters.AddWithValue("@p2", data.nama_section);
-                command.Parameters.AddWithValue("@p3", GetFileBytes(data.video_pembelajaran)); // Assuming video_pembelajaran is a file path
+                command.Parameters.AddWithValue("@p3", data.video_pembelajaran); // Assuming video_pembelajaran is a file path
                 command.Parameters.AddWithValue("@p4", data.modul_pembelajaran);
                 command.Parameters.AddWithValue("@p5", data.deskripsi);
                 command.Parameters.AddWithValue("@p6", 1); // Assuming status is supposed to be @p6
