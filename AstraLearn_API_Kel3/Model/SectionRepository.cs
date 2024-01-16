@@ -64,7 +64,7 @@ namespace AstraLearn_API_Kel3.Model
             SectionModel data = new SectionModel();
             try
             {
-                string query = "SELECT * FROM tb_section WHERE id_section = @p1";
+                string query = "SELECT * FROM tb_section WHERE id_section = @p1 AND status = 1";
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {
                     command.Parameters.AddWithValue("@p1", id);
@@ -80,14 +80,16 @@ namespace AstraLearn_API_Kel3.Model
                             data.modul_pembelajaran = reader["modul_pembelajaran"].ToString();
                             data.deskripsi = reader["deskripsi"].ToString();
                             data.status = Convert.ToInt32(reader["status"]);
-
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                Console.WriteLine(ex.Message);
+                // Manajemen pengecualian dengan lebih terstruktur
+                Console.WriteLine($"SQL Exception: {ex.Message}");
+                // Atau, lempar pengecualian kustom atau tangani sesuai kebutuhan
+                // throw new CustomDataAccessException("Failed to retrieve data from the database", ex);
             }
             finally
             {
@@ -96,15 +98,17 @@ namespace AstraLearn_API_Kel3.Model
             return data;
         }
 
-        public List<SectionModel> GetDataByPelatihan(int idPelatihan)
+
+        public List<SectionModel> GetDataByPelatihan(int idPelatihan, int status)
         {
             List<SectionModel> dataList = new List<SectionModel>();
             try
             {
-                string query = "SELECT * FROM tb_section WHERE id_pelatihan = @p1";
+                string query = "SELECT * FROM tb_section WHERE id_pelatihan = @p1 and status = @p2";
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {
                     command.Parameters.AddWithValue("@p1", idPelatihan);
+                    command.Parameters.AddWithValue("@p2", 1);
                     _connection.Open();
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -164,7 +168,7 @@ namespace AstraLearn_API_Kel3.Model
             }
         }
 
-        // Helper method to convert file content to byte array
+        /*// Helper method to convert file content to byte array
         private byte[] GetFileBytes(string filePath)
         {
             try
@@ -178,7 +182,7 @@ namespace AstraLearn_API_Kel3.Model
                 Console.WriteLine($"Error reading file: {ex.Message}");
                 return null;
             }
-        }
+        }*/
 
 
 
@@ -186,21 +190,17 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "DELETE FROM tb_section SET status = 0 WHERE id_section = @p1";
-                using (SqlCommand command = new SqlCommand(query, _connection))
-                {
-                    command.Parameters.AddWithValue("@p1", id);
-                    _connection.Open();
-                    command.ExecuteNonQuery();
-                }
+                // Ubah data status menjadi 0 daripada menghapusnya secara fisik
+                string query = "UPDATE tb_section SET status = 0 WHERE id_section = @p1";
+                using SqlCommand command = new SqlCommand(query, _connection);
+                command.Parameters.AddWithValue("@p1", id);
+                _connection.Open();
+                command.ExecuteNonQuery();
+                _connection.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                _connection.Close();
             }
         }
 
@@ -210,7 +210,7 @@ namespace AstraLearn_API_Kel3.Model
             {
                 data.status = 1;
 
-                string query = "UPDATE tb_section SET id_pelatihan = @p2, nama_section = @p3, video_pembelajaran = @p4, modul_pembelajaran = @p5, deskripsi = @p6 , status = p@7 WHERE id_section = @p1";
+                string query = "UPDATE tb_section SET id_pelatihan = @p2, nama_section = @p3, video_pembelajaran = @p4, modul_pembelajaran = @p5, deskripsi = @p6 , status = @p7 WHERE id_section = @p1";
 
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {

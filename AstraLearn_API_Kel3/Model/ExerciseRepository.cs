@@ -23,7 +23,7 @@ namespace AstraLearn_API_Kel3.Model
             List<ExerciseModel> dataList = new List<ExerciseModel>();
             try
             {
-                string query = "SELECT * FROM tb_soal_exercise WHERE id_section = @p1";
+                string query = "SELECT * FROM tb_soal_exercise WHERE id_section = @p1 AND status = 1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", sectionId);
                 _connection.Open();
@@ -63,7 +63,7 @@ namespace AstraLearn_API_Kel3.Model
             ExerciseModel data = new ExerciseModel();
             try
             {
-                string query = "SELECT * FROM tb_soal_exercise WHERE id_exercise = @p1";
+                string query = "SELECT * FROM tb_soal_exercise WHERE id_exercise = @p1 AND status = 1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();

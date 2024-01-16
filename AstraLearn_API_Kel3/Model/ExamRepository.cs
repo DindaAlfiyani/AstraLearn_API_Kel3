@@ -21,7 +21,7 @@ namespace AstraLearn_API_Kel3.Model
             List<ExamModel> dataList = new List<ExamModel>();
             try
             {
-                string query = "SELECT * FROM tb_soal_exam WHERE id_exam = @p1";
+                string query = "SELECT * FROM tb_soal_exam WHERE id_pelatihan = @p1 AND status = 1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", trainingId);
                 _connection.Open();
@@ -61,7 +61,7 @@ namespace AstraLearn_API_Kel3.Model
             ExamModel data = new ExamModel();
             try
             {
-                string query = "SELECT * FROM tb_soal_exam WHERE id_exam = @p1";
+                string query = "SELECT * FROM tb_soal_exam WHERE id_exam = @p1 AND status = 1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();
@@ -173,9 +173,9 @@ namespace AstraLearn_API_Kel3.Model
             }
         }
 
-        internal object GetAllData()
-        {
-            throw new NotImplementedException();
-        }
+        /*       internal object GetAllData()
+               {
+                   throw new NotImplementedException();
+               }*/
     }
 }

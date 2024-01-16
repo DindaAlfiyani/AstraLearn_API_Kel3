@@ -35,14 +35,14 @@ namespace AstraLearn_API_Kel3.Controllers
         }
 
         [HttpGet("[controller]/GetAllSectionsById")]
-        public ActionResult<ResponseModel> GetAllSections2(int id)
+        public ActionResult<ResponseModel> GetAllSections2(int id, int status)
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
                 responseModel.message = "Berhasil";
                 responseModel.status = 200;
-                responseModel.data = _sectionRepository.GetDataByPelatihan(id);
+                responseModel.data = _sectionRepository.GetDataByPelatihan(id, status);
             }
             catch (Exception ex)
             {

@@ -15,21 +15,21 @@ namespace AstraLearn_API_Kel3.Controllers
         }
 
         [HttpGet("[controller]/GetAllExams")]
-        public ResponseModel GetAllExam()
+        public ActionResult<ResponseModel> GetAllExams(int id)
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
                 responseModel.message = "Berhasil";
                 responseModel.status = 200;
-                responseModel.data = _examRepository.GetAllData();
+                responseModel.data = _examRepository.GetAllData(id);
             }
             catch (Exception ex)
             {
                 responseModel.message = ex.Message;
                 responseModel.status = 500;
             }
-            return responseModel;
+            return Ok(responseModel);
         }
 
         [HttpGet("[controller]/GetExam")]
