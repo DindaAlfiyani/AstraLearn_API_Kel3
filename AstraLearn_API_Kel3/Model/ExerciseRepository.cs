@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
@@ -98,19 +99,17 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_soal_exercise (id_section, soal, pilgan1, pilgan2, pilgan3, pilgan4, pilgan5, kunci_jawaban,status) " +
-                               "VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
-                SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", data.id_section);
-                command.Parameters.AddWithValue("@p2", data.soal);
-                command.Parameters.AddWithValue("@p3", data.pilgan1);
-                command.Parameters.AddWithValue("@p4", data.pilgan2);
-                command.Parameters.AddWithValue("@p5", data.pilgan3);
-                command.Parameters.AddWithValue("@p6", data.pilgan4);
-                command.Parameters.AddWithValue("@p7", data.pilgan5);
-                command.Parameters.AddWithValue("@p8", data.kunci_jawaban);
-                command.Parameters.AddWithValue("@p9", 1); // Set status to 1 for new data
+                SqlCommand command = new SqlCommand("sp_InsertSoalExercise", _connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
 
+                command.Parameters.AddWithValue("@id_section", data.id_section);
+                command.Parameters.AddWithValue("@soal", data.soal);
+                command.Parameters.AddWithValue("@pilgan1", data.pilgan1);
+                command.Parameters.AddWithValue("@pilgan2", data.pilgan2);
+                command.Parameters.AddWithValue("@pilgan3", data.pilgan3);
+                command.Parameters.AddWithValue("@pilgan4", data.pilgan4);
+                command.Parameters.AddWithValue("@pilgan5", data.pilgan5);
+                command.Parameters.AddWithValue("@kunci_jawaban", data.kunci_jawaban);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -128,21 +127,18 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "UPDATE tb_soal_exercise " +
-                               "SET id_section = @p2, soal = @p3, pilgan1 = @p4, pilgan2 = @p5, pilgan3 = @p6, pilgan4 = @p7, pilgan5 = @p8, kunci_jawaban = @p9 " +
-                               "WHERE id_exercise = @p1";
+                SqlCommand command = new SqlCommand("sp_UpdateSoalExercise", _connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
 
-                using SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", data.id_exercise);
-                command.Parameters.AddWithValue("@p2", data.id_section);
-                command.Parameters.AddWithValue("@p3", data.soal);
-                command.Parameters.AddWithValue("@p4", data.pilgan1);
-                command.Parameters.AddWithValue("@p5", data.pilgan2);
-                command.Parameters.AddWithValue("@p6", data.pilgan3);
-                command.Parameters.AddWithValue("@p7", data.pilgan4);
-                command.Parameters.AddWithValue("@p8", data.pilgan5);
-                command.Parameters.AddWithValue("@p9", data.kunci_jawaban);
-                command.Parameters.AddWithValue("@p10", data.status);
+                command.Parameters.AddWithValue("@id_exercise", data.id_exercise);
+                command.Parameters.AddWithValue("@id_section", data.id_section);
+                command.Parameters.AddWithValue("@soal", data.soal);
+                command.Parameters.AddWithValue("@pilgan1", data.pilgan1);
+                command.Parameters.AddWithValue("@pilgan2", data.pilgan2);
+                command.Parameters.AddWithValue("@pilgan3", data.pilgan3);
+                command.Parameters.AddWithValue("@pilgan4", data.pilgan4);
+                command.Parameters.AddWithValue("@pilgan5", data.pilgan5);
+                command.Parameters.AddWithValue("@kunci_jawaban", data.kunci_jawaban);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -160,11 +156,13 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "UPDATE tb_soal_exercise set status = 0 where id_exercise = @p1";
-                using SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", id);
+                using SqlCommand command = new SqlCommand("sp_DeleteSoalExercise", _connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@id_exercise", id);
+
                 _connection.Open();
                 command.ExecuteNonQuery();
+                _connection.Close();
             }
             catch (Exception ex)
             {

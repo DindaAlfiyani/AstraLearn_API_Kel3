@@ -29,9 +29,10 @@ namespace AstraLearn_API_Kel3.Model
                 {
                     MengikutiPelatihanModel data = new MengikutiPelatihanModel
                     {
+                        id_mengikuti_pelatihan = Convert.ToInt32(reader["id_mengikuti_pelatihan"]),
                         id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
                         id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
-                        riwayat_section = Convert.ToInt32(reader["riwayat_section"])
+                        riwayat_section = Convert.ToInt32(reader["riwayat_section"]),
                     };
                     dataList.Add(data);
                 }
@@ -61,6 +62,7 @@ namespace AstraLearn_API_Kel3.Model
                 SqlDataReader reader = command.ExecuteReader();
                 if (reader.Read())
                 {
+                    data.id_mengikuti_pelatihan = Convert.ToInt32(reader["id_mengikuti_pelatihan"]);
                     data.id_pengguna = Convert.ToInt32(reader["id_pengguna"]);
                     data.id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]);
                     data.riwayat_section = Convert.ToInt32(reader["riwayat_section"]);
@@ -82,12 +84,13 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_mengikuti_pelatihan (id_pengguna, id_pelatihan, riwayat_section) " +
-                               "VALUES (@p1, @p2, @p3, @p4, @p5)";
+                string query = "INSERT INTO tb_mengikuti_pelatihan (id_pengguna, id_pelatihan, riwayat_section, status) " +
+                               "VALUES (@p1, @p2, @p3, @p4)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
                 command.Parameters.AddWithValue("@p2", data.id_pelatihan);
                 command.Parameters.AddWithValue("@p3", data.riwayat_section);
+                command.Parameters.AddWithValue("@p4", 1);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -102,7 +105,7 @@ namespace AstraLearn_API_Kel3.Model
 
             try
             {
-                string query = "UPDATE tb_pelatihan SET jumlah_peserta = jumlah_peserta + 1 WHERE id_pelatihan = @p1";
+                string query = "UPDATE PelatihanView SET jumlah_peserta = jumlah_peserta + 1 WHERE id_pelatihan = @p1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pelatihan);
                 _connection.Open();
@@ -144,7 +147,7 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "DELETE FROM tb_mengikuti_pelatihan WHERE id_mengikuti = @p1";
+                string query = "DELETE FROM tb_mengikuti_pelatihan id_mengikuti_pelatihan = @p1";
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", id);
                 _connection.Open();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
@@ -16,50 +17,12 @@ namespace AstraLearn_API_Kel3.Model
             _connection = new SqlConnection(_connectionString);
         }
 
-     /*   public List<PelatihanModel> GetAllData()
-        {
-            List<PelatihanModel> dataList = new List<PelatihanModel>();
-            try
-            {
-                string query = "select* from tb_pelatihan WHERE status = 1";
-                SqlCommand command = new SqlCommand(query, _connection);
-                _connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    PelatihanModel data = new PelatihanModel
-                    {
-                        id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
-                        id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
-                        id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]),
-                        id_sertifikat = Convert.ToInt32(reader["id_sertifikat"]),
-                        nama_pelatihan = reader["nama_pelatihan"].ToString(),
-                        tanggal_mulai = Convert.ToDateTime(reader["tanggal_mulai"]),
-                        tanggal_selesai = Convert.ToDateTime(reader["tanggal_selesai"]),
-                        deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
-                        nilai = Convert.ToInt32(reader["nilai"]),
-                        status = Convert.ToInt32(reader["status"])
-                    };
-                    dataList.Add(data);
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                _connection.Close();
-            }
-            return dataList;
-        }*/
         public List<PelatihanModel> GetAllData()
         {
             List<PelatihanModel> dataList = new List<PelatihanModel>();
             try
             {
-                string query = "select* from PelatihanView";
+                string query = "select* from PelatihanView where status = 1";
                 SqlCommand command = new SqlCommand(query, _connection);
                 _connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -74,7 +37,8 @@ namespace AstraLearn_API_Kel3.Model
                         deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
                         jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
                         nama_klasifikasi = reader["nama_klasifikasi"].ToString(),
-                        nilai = Convert.ToInt32(reader["nilai"])
+                        nilai = Convert.ToInt32(reader["nilai"]),
+                        status = Convert.ToInt32(reader["status"])
                     };
                     dataList.Add(data);
                 }
@@ -164,17 +128,21 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                string query = "INSERT INTO tb_pelatihan (id_pengguna, id_klasifikasi, nama_pelatihan, deskripsi_pelatihan, nilai, status) " +
-                               "VALUES (@p1, @p2, @p3, @p4, @p5, @p6)";
-                SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", data.id_pengguna);
-                command.Parameters.AddWithValue("@p2", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p3", data.nama_pelatihan);
-                command.Parameters.AddWithValue("@p4", data.deskripsi_pelatihan);
-                command.Parameters.AddWithValue("@p5", data.nilai);
-                command.Parameters.AddWithValue("@p6", 1 );
+                using SqlCommand command = new SqlCommand("sp_InsertPelatihan", _connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@id_pengguna", data.id_pengguna);
+                command.Parameters.AddWithValue("@id_klasifikasi", data.id_klasifikasi);
+                command.Parameters.AddWithValue("@id_sertifikat", data.id_sertifikat);
+                command.Parameters.AddWithValue("@nama_pelatihan", data.nama_pelatihan);
+                command.Parameters.AddWithValue("@tanggal_mulai", data.tanggal_mulai);
+                command.Parameters.AddWithValue("@tanggal_selesai", data.tanggal_selesai);
+                command.Parameters.AddWithValue("@deskripsi_pelatihan", data.deskripsi_pelatihan);
+                command.Parameters.AddWithValue("@nilai", data.nilai);
+
                 _connection.Open();
                 command.ExecuteNonQuery();
+                _connection.Close();
             }
             catch (Exception ex)
             {
@@ -190,25 +158,22 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                data.status = 1; 
+                using SqlCommand command = new SqlCommand("sp_UpdatePelatihan", _connection);
+                command.CommandType = CommandType.StoredProcedure;
 
-                string query = "UPDATE tb_pelatihan " +
-                               "SET id_pengguna = @p2, id_klasifikasi = @p3, id_sertifikat = @p4, nama_pelatihan = @p5, tanggal_mulai = @p6, tanggal_selesai = @p7, deskripsi_pelatihan = @p8, nilai = @p9, status = @p10 " +
-                               "WHERE id_pelatihan = @p1";
+                command.Parameters.AddWithValue("@id_pelatihan", data.id_pelatihan);
+                command.Parameters.AddWithValue("@id_pengguna", data.id_pengguna);
+                command.Parameters.AddWithValue("@id_klasifikasi", data.id_klasifikasi);
+                command.Parameters.AddWithValue("@id_sertifikat", data.id_sertifikat);
+                command.Parameters.AddWithValue("@nama_pelatihan", data.nama_pelatihan);
+                command.Parameters.AddWithValue("@tanggal_mulai", data.tanggal_mulai);
+                command.Parameters.AddWithValue("@tanggal_selesai", data.tanggal_selesai);
+                command.Parameters.AddWithValue("@deskripsi_pelatihan", data.deskripsi_pelatihan);
+                command.Parameters.AddWithValue("@nilai", data.nilai);
 
-                using SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", data.id_pelatihan);
-                command.Parameters.AddWithValue("@p2", data.id_pengguna);
-                command.Parameters.AddWithValue("@p3", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p4", data.id_sertifikat);
-                command.Parameters.AddWithValue("@p5", data.nama_pelatihan);
-                command.Parameters.AddWithValue("@p6", data.tanggal_mulai);
-                command.Parameters.AddWithValue("@p7", data.tanggal_selesai);
-                command.Parameters.AddWithValue("@p8", data.deskripsi_pelatihan);
-                command.Parameters.AddWithValue("@p9", data.nilai);
-                command.Parameters.AddWithValue("@p10", data.status);
                 _connection.Open();
                 command.ExecuteNonQuery();
+                _connection.Close();
             }
             catch (Exception ex)
             {
@@ -248,10 +213,10 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                // Ubah data status menjadi 0 daripada menghapusnya secara fisik
-                string query = "UPDATE tb_pelatihan SET status = 0 WHERE id_pelatihan = @p1";
-                using SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", id);
+                using SqlCommand command = new SqlCommand("sp_DeletePelatihan", _connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@id_pelatihan", id);
+
                 _connection.Open();
                 command.ExecuteNonQuery();
                 _connection.Close();

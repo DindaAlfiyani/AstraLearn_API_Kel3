@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data;
 using AstraLearn_API_Kel3.Model;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AstraLearn_API_Kel3.Model
 {
@@ -10,6 +12,7 @@ namespace AstraLearn_API_Kel3.Model
     {
         private readonly string _connectionString;
         private readonly SqlConnection _connection;
+        ResponseModel response = new ResponseModel();
 
         public KlasifikasiPelatihanRepository(IConfiguration configuration)
         {
@@ -81,44 +84,49 @@ namespace AstraLearn_API_Kel3.Model
             return data;
         }
 
-        public void InsertData(KlasifikasiPelatihanModel data)
+        public ResponseModel InsertData(KlasifikasiPelatihanModel data)
         {
             try
             {
-                string query = "INSERT INTO tb_klasifikasi_pelatihan (nama_klasifikasi, deskripsi, status) VALUES (@p1, @p2, @p3)";
-                SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", data.nama_klasifikasi);
-                command.Parameters.AddWithValue("@p2", data.deskripsi);
-                command.Parameters.AddWithValue("@p3", 1); // Set status to 1 for new data
+                SqlCommand command = new SqlCommand("sp_InsertKlasifikasiPelatihan", _connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@nama_klasifikasi", data.nama_klasifikasi);
+                command.Parameters.AddWithValue("@deskripsi", data.deskripsi);
+
                 _connection.Open();
                 command.ExecuteNonQuery();
+                _connection.Close();
+
+                response.status = 200;
+                response.message = "klasifikasi pelatihan berhasil dibuat";
+                response.data = data;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                response.status = 500;
+                response.message = "Terjadi kesalahan saat membuat Kelompok = " + ex.Message;
+                response.data = null;
             }
             finally
             {
                 _connection.Close();
             }
+            return response;
         }
 
         public void UpdateData(KlasifikasiPelatihanModel data)
         {
             try
             {
-                // Jika Anda ingin status selalu menjadi 1 pada saat pembaruan
-                data.status = 1;
+                using SqlCommand command = new SqlCommand("sp_UpdateKlasifikasiPelatihan", _connection);
+                command.CommandType = CommandType.StoredProcedure;
 
-                string query = "UPDATE tb_klasifikasi_pelatihan " +
-                               "SET nama_klasifikasi = @p2, deskripsi = @p3, status = @p4 " +
-                               "WHERE id_klasifikasi = @p1";
+                command.Parameters.AddWithValue("@id_klasifikasi", data.id_klasifikasi);
+                command.Parameters.AddWithValue("@nama_klasifikasi", data.nama_klasifikasi);
+                command.Parameters.AddWithValue("@deskripsi", data.deskripsi);
 
-                using SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", data.id_klasifikasi);
-                command.Parameters.AddWithValue("@p2", data.nama_klasifikasi);
-                command.Parameters.AddWithValue("@p3", data.deskripsi);
-                command.Parameters.AddWithValue("@p4", data.status);
                 _connection.Open();
                 command.ExecuteNonQuery();
                 _connection.Close();
@@ -133,10 +141,10 @@ namespace AstraLearn_API_Kel3.Model
         {
             try
             {
-                // Ubah data status menjadi 0 daripada menghapusnya secara fisik
-                string query = "UPDATE tb_klasifikasi_pelatihan SET status = 0 WHERE id_klasifikasi = @p1";
-                using SqlCommand command = new SqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@p1", id);
+                using SqlCommand command = new SqlCommand("sp_DeleteKlasifikasiPelatihan", _connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@id_klasifikasi", id);
+
                 _connection.Open();
                 command.ExecuteNonQuery();
                 _connection.Close();
