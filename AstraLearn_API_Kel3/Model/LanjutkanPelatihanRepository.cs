@@ -68,5 +68,43 @@ namespace AstraLearn_API_Kel3.Model
             }
             return pelatihanList;
         }
+
+        /*public List<PelatihanModel> GetLanjutkanPelatihan(int idPengguna)
+        {
+            List<PelatihanModel> pelatihanList = new List<PelatihanModel>();
+            try
+            {
+                string query = "select* from PelatihanView";
+                SqlCommand command = new SqlCommand(query, _connection);
+                command.Parameters.AddWithValue("@p1", idPengguna);
+                _connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    PelatihanModel data = new PelatihanModel
+                    {
+                        id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
+                        id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
+                        id_klasifikasi = Convert.ToInt32(reader["id_klasifikasi"]),
+                        nama_pelatihan = reader["nama_pelatihan"].ToString(),
+                        deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
+                        jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
+                        nama_klasifikasi = reader["nama_klasifikasi"].ToString(),
+                        nilai = Convert.ToInt32(reader["nilai"])
+                    };
+                    pelatihanList.Add(data);
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+            return pelatihanList;
+        }*/
     }
 }

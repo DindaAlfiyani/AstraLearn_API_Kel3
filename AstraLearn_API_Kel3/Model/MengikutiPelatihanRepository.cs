@@ -33,6 +33,8 @@ namespace AstraLearn_API_Kel3.Model
                         id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
                         id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
                         riwayat_section = Convert.ToInt32(reader["riwayat_section"]),
+                        tanggal_mulai = Convert.ToDateTime(reader["tanggal_mulai"]),
+                        tanggal_selesai = Convert.ToDateTime(reader["tanggal_selesai"]),
                     };
                     dataList.Add(data);
                 }
@@ -80,17 +82,54 @@ namespace AstraLearn_API_Kel3.Model
             return data;
         }
 
+        /*public List<MengikutiPelatihanModel> GetFollowingsForUser(int userId)
+        {
+            List<MengikutiPelatihanModel> followingsList = new List<MengikutiPelatihanModel>();
+            try
+            {
+                string query = "SELECT * FROM tb_mengikuti_pelatihan WHERE id_pengguna = @p1";
+                SqlCommand command = new SqlCommand(query, _connection);
+                command.Parameters.AddWithValue("@p1", userId);
+                _connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    MengikutiPelatihanModel data = new MengikutiPelatihanModel
+                    {
+                        id_mengikuti_pelatihan = Convert.ToInt32(reader["id_mengikuti_pelatihan"]),
+                        id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
+                        id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
+                        riwayat_section = Convert.ToInt32(reader["riwayat_section"]),
+                        tanggal_mulai = Convert.ToDateTime(reader["tanggal_mulai"]),
+                        tanggal_selesai = Convert.ToDateTime(reader["tanggal_selesai"]),
+                    };
+                    followingsList.Add(data);
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+            return followingsList;
+        }*/
+
         public void InsertData(MengikutiPelatihanModel data)
         {
             try
             {
-                string query = "INSERT INTO tb_mengikuti_pelatihan (id_pengguna, id_pelatihan, riwayat_section, status) " +
-                               "VALUES (@p1, @p2, @p3, @p4)";
+                string query = "INSERT INTO tb_mengikuti_pelatihan (id_pengguna, id_pelatihan, riwayat_section, tanggal_mulai, status) " +
+                               "VALUES (@p1, @p2, @p3, @p4, @p5)";
                 SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
                 command.Parameters.AddWithValue("@p2", data.id_pelatihan);
                 command.Parameters.AddWithValue("@p3", data.riwayat_section);
-                command.Parameters.AddWithValue("@p4", 1);
+                command.Parameters.AddWithValue("@p4", data.tanggal_mulai);
+                command.Parameters.AddWithValue("@p5", 1);
                 _connection.Open();
                 command.ExecuteNonQuery();
             }
@@ -126,12 +165,13 @@ namespace AstraLearn_API_Kel3.Model
             try
             {
                 string query = "UPDATE tb_mengikuti_pelatihan " +
-                               "SET riwayat_section = riwayat_section + 1 " +
+                               "SET riwayat_section = riwayat_section + 1 , tanggal_selesai = @p3" +
                                "WHERE id_pengguna = @p1 AND id_pelatihan = @p2";
 
                 using SqlCommand command = new SqlCommand(query, _connection);
                 command.Parameters.AddWithValue("@p1", data.id_pengguna);
                 command.Parameters.AddWithValue("@p2", data.id_pelatihan);
+                command.Parameters.AddWithValue("@p3", data.tanggal_selesai);
                 _connection.Open();
                 command.ExecuteNonQuery();
                 _connection.Close();

@@ -22,7 +22,7 @@ namespace AstraLearn_API_Kel3.Model
             List<PelatihanModel> dataList = new List<PelatihanModel>();
             try
             {
-                string query = "select* from PelatihanView where status = 1";
+                string query = "select* from PelatihanView";
                 SqlCommand command = new SqlCommand(query, _connection);
                 _connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -37,8 +37,7 @@ namespace AstraLearn_API_Kel3.Model
                         deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
                         jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
                         nama_klasifikasi = reader["nama_klasifikasi"].ToString(),
-                        nilai = Convert.ToInt32(reader["nilai"]),
-                        status = Convert.ToInt32(reader["status"])
+                        nilai = Convert.ToInt32(reader["nilai"])
                     };
                     dataList.Add(data);
                 }

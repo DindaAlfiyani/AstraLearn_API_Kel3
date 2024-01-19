@@ -50,6 +50,13 @@ namespace AstraLearn_API_Kel3.Controllers
             return responseModel;
         }
 
+        /*[HttpGet("[controller]/GetFollowingsForUser")]
+        public ActionResult<IEnumerable<MengikutiPelatihanModel>> GetFollowingsForUser(int userId)
+        {
+            var followings = _mengikutiPelatihanRepository.GetFollowingsForUser(userId);
+            return Ok(followings);
+        }*/
+
         [HttpPost("[controller]/InsertMengikutiPelatihan")]
         public ResponseModel InsertMengikutiPelatihan([FromBody] MengikutiPelatihanModel mengikutiPelatihanModel)
         {
