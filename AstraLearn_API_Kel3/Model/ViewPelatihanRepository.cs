@@ -21,22 +21,31 @@ namespace AstraLearn_API_Kel3.Model
             List<ViewPelatihanModel> dataList = new List<ViewPelatihanModel>();
             try
             {
-                string query = @"SELECT tb_pengguna.nama_lengkap AS nama_pengguna, 
-                                        tb_klasifikasi_pelatihan.nama_klasifikasi, 
-                                        tb_pelatihan.nama_pelatihan, 
-                                        tb_pelatihan.deskripsi_pelatihan, 
-                                        tb_pelatihan.jumlah_peserta,
-                                        COUNT(DISTINCT CASE WHEN rs.riwayat_section = tb_pelatihan.jumlah_section THEN rs.id_pengguna END) AS jumlah_peserta_selesai
-                                FROM tb_pelatihan
-                                JOIN tb_pengguna ON tb_pelatihan.id_pengguna = tb_pengguna.id_pengguna
-                                JOIN tb_klasifikasi_pelatihan ON tb_pelatihan.id_klasifikasi = tb_klasifikasi_pelatihan.id_klasifikasi
-                                LEFT JOIN tb_mengikuti_pelatihan rs ON tb_pelatihan.id_pelatihan = rs.id_pelatihan
+                string query = @"WITH JumlahSectionCTE AS (
+                                    SELECT id_pelatihan, COUNT(*) AS jumlah_section
+                                    FROM tb_section
+                                    GROUP BY id_pelatihan
+                                )
+
+                                SELECT 
+                                    tb_pengguna.nama_lengkap AS nama_pengguna, 
+                                    tb_klasifikasi_pelatihan.nama_klasifikasi, 
+                                    pl.nama_pelatihan, 
+                                    pl.deskripsi_pelatihan, 
+                                    COUNT(mp.id_pelatihan) AS jumlah_peserta,
+                                    COUNT(CASE WHEN mp.riwayat_section = jscte.jumlah_section THEN mp.id_pengguna END) AS jumlah_peserta_selesai
+                                FROM tb_pelatihan pl
+                                JOIN tb_pengguna ON pl.id_pengguna = tb_pengguna.id_pengguna
+                                JOIN tb_klasifikasi_pelatihan ON pl.id_klasifikasi = tb_klasifikasi_pelatihan.id_klasifikasi
+                                LEFT JOIN tb_mengikuti_pelatihan mp ON pl.id_pelatihan = mp.id_pelatihan
+                                LEFT JOIN JumlahSectionCTE jscte ON pl.id_pelatihan = jscte.id_pelatihan
+                                WHERE pl.status = 1
                                 GROUP BY 
                                     tb_pengguna.nama_lengkap, 
                                     tb_klasifikasi_pelatihan.nama_klasifikasi, 
-                                    tb_pelatihan.nama_pelatihan, 
-                                    tb_pelatihan.deskripsi_pelatihan, 
-                                    tb_pelatihan.jumlah_peserta";
+                                    pl.nama_pelatihan, 
+                                    pl.deskripsi_pelatihan, 
+                                    jscte.jumlah_section";
 
                 SqlCommand command = new SqlCommand(query, _connection);
                 _connection.Open();

@@ -160,7 +160,7 @@ namespace AstraLearn_API_Kel3.Model
             }
         }
 
-        public void UpdateData(MengikutiPelatihanModel data)
+        /*public void UpdateData(MengikutiPelatihanModel data)
         {
             try
             {
@@ -180,8 +180,38 @@ namespace AstraLearn_API_Kel3.Model
             {
                 Console.WriteLine(ex.Message);
             }
-        }
+        }*/
 
+        public void UpdateData(MengikutiPelatihanModel data)
+        {
+            try
+            {
+                data.status = 1;
+                string query = "UPDATE tb_mengikuti_pelatihan " +
+                "SET riwayat_section = riwayat_section + 1, tanggal_selesai = @p3 " +
+                "WHERE id_pengguna = @p1 AND id_pelatihan = @p2";
+
+
+                using (SqlCommand command = new SqlCommand(query, _connection))
+                {
+                    command.Parameters.AddWithValue("@p1", data.id_pengguna);
+                    command.Parameters.AddWithValue("@p2", data.id_pelatihan);
+                    command.Parameters.AddWithValue("@p3", data.tanggal_selesai);
+                    _connection.Open();
+                    command.ExecuteNonQuery();
+                }
+
+                // ... (your existing code)
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
 
         public void DeleteData(int id)
         {
