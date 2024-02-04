@@ -68,6 +68,24 @@ namespace AstraLearn_API_Kel3.Controllers
             return responseModel;
         }
 
+        [HttpGet("[controller]/GetPelatihanByKlasifikasi")]
+        public ActionResult<ResponseModel> GetPelatihanByKlasifikasi(int id, int status)
+        {
+            ResponseModel responseModel = new ResponseModel();
+            try
+            {
+                responseModel.message = "Berhasil";
+                responseModel.status = 200;
+                responseModel.data = _pelatihanRepository.GetDataByPelatihan(id, status);
+            }
+            catch (Exception ex)
+            {
+                responseModel.message = ex.Message;
+                responseModel.status = 500;
+            }
+            return Ok(responseModel);
+        }
+
         [HttpPost("[controller]/InsertPelatihan")]
         public ResponseModel InsertPelatihan([FromBody] PelatihanModel pelatihanModel)
         {
@@ -138,6 +156,36 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.status = 500;
             }
             return responseModel;
+        }
+
+        [HttpPost("[controller]/UploadFile")]
+        public ActionResult UploadFile()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+
+                if (file != null && file.Length > 0)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var filePath = Path.Combine("D:\\SEMESTER 3\\PRG 4\\project astralearn\\SystemAstraLearn_Kelompok3\\SystemAstraLearn_Kelompok3\\wwwroot\\assets\\Thumbnail", fileName); // Sesuaikan dengan direktori yang diinginkan
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    return new JsonResult(new { success = true, message = "File uploaded successfully." });
+                }
+                else
+                {
+                    return new JsonResult(new { success = false, message = "No file received." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = $"Error: {ex.Message}" });
+            }
         }
     }
 }

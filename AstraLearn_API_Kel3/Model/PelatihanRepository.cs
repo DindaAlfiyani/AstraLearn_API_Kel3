@@ -22,7 +22,7 @@ namespace AstraLearn_API_Kel3.Model
             List<PelatihanModel> dataList = new List<PelatihanModel>();
             try
             {
-                string query = "select* from PelatihanView";
+                string query = "select * from PelatihanView";
                 SqlCommand command = new SqlCommand(query, _connection);
                 _connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -37,7 +37,8 @@ namespace AstraLearn_API_Kel3.Model
                         deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
                         jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
                         nama_klasifikasi = reader["nama_klasifikasi"].ToString(),
-                        nilai = Convert.ToInt32(reader["nilai"])
+                        nilai = Convert.ToInt32(reader["nilai"]),
+                        gambar = reader["gambar"].ToString()
                     };
                     dataList.Add(data);
                 }
@@ -73,7 +74,8 @@ namespace AstraLearn_API_Kel3.Model
                         nama_pelatihan = reader["nama_pelatihan"].ToString(),
                         deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
                         jumlah_peserta = Convert.ToInt32(reader["jumlah_peserta"]),
-                        nilai = Convert.ToInt32(reader["nilai"])
+                        nilai = Convert.ToInt32(reader["nilai"]),
+                        gambar = reader["gambar"].ToString()
                     };
                     dataList.Add(data);
                 }
@@ -123,6 +125,51 @@ namespace AstraLearn_API_Kel3.Model
             return data;
         }
 
+        public List<PelatihanModel> GetDataByPelatihan(int idKlasifikasi, int status)
+        {
+            List<PelatihanModel> dataList = new List<PelatihanModel>();
+            try
+            {
+                string query = "SELECT * FROM tb_pelatihan WHERE id_klasifikasi = @p1 and status = @p2";
+                using (SqlCommand command = new SqlCommand(query, _connection))
+                {
+                    command.Parameters.AddWithValue("@p1", idKlasifikasi);
+                    command.Parameters.AddWithValue("@p2", 1);
+                    _connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            PelatihanModel data = new PelatihanModel
+                            {
+                                id_pelatihan = Convert.ToInt32(reader["id_pelatihan"]),
+                                id_pengguna = Convert.ToInt32(reader["id_pengguna"]),
+                                id_klasifikasi = Convert.ToInt32(reader["id_sertifikat"]),
+                                id_sertifikat = Convert.ToInt32(reader["id_klasifikasi"]),
+                                nama_pelatihan = reader["nama_pelatihan"].ToString(),
+                                tanggal_mulai = Convert.ToDateTime(reader["tanggal_mulai"]),
+                                tanggal_selesai = Convert.ToDateTime(reader["tanggal_selesai"]),
+                                deskripsi_pelatihan = reader["deskripsi_pelatihan"].ToString(),
+                                nilai = Convert.ToInt32(reader["nilai"]),
+                                gambar = reader["gambar"].ToString(),
+                                status = Convert.ToInt32(reader["status"])
+
+                            };
+                            dataList.Add(data);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+            return dataList;
+        }
         public void InsertData(PelatihanModel data)
         {
             try
@@ -138,6 +185,7 @@ namespace AstraLearn_API_Kel3.Model
                 command.Parameters.AddWithValue("@tanggal_selesai", data.tanggal_selesai);
                 command.Parameters.AddWithValue("@deskripsi_pelatihan", data.deskripsi_pelatihan);
                 command.Parameters.AddWithValue("@nilai", data.nilai);
+                command.Parameters.AddWithValue("@gambar", data.gambar);
 
                 _connection.Open();
                 command.ExecuteNonQuery();
@@ -169,6 +217,7 @@ namespace AstraLearn_API_Kel3.Model
                 command.Parameters.AddWithValue("@tanggal_selesai", data.tanggal_selesai);
                 command.Parameters.AddWithValue("@deskripsi_pelatihan", data.deskripsi_pelatihan);
                 command.Parameters.AddWithValue("@nilai", data.nilai);
+                command.Parameters.AddWithValue("@gambar", data.gambar);
 
                 _connection.Open();
                 command.ExecuteNonQuery();

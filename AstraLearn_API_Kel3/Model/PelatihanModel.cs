@@ -16,5 +16,6 @@ namespace AstraLearn_API_Kel3.Model
         public string nama_klasifikasi { get; set; }
         public int nilai { get; set; }
         public int status { get; set; }
+        public string gambar { get; set; }
     }
 }
