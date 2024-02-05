@@ -56,6 +56,14 @@ namespace AstraLearn_API_Kel3.Controllers
             ResponseModel responseModel = new ResponseModel();
             try
             {
+                // Validasi nama_klasifikasi tidak boleh sama sebelum menyimpan data
+                if (_klasifikasiPelatihanRepository.CheckKlasifikasi(klasifikasiPelatihanModel.nama_klasifikasi))
+                {
+                    responseModel.message = "Nama klasifikasi tersebut sudah ada.";
+                    responseModel.status = 400; // Ubah status sesuai kebutuhan, misalnya 400 untuk Bad Request
+                    return responseModel;
+                }
+
                 _klasifikasiPelatihanRepository.InsertData(klasifikasiPelatihanModel);
                 responseModel.message = "Data berhasil ditambahkan";
                 responseModel.status = 200;
@@ -66,6 +74,10 @@ namespace AstraLearn_API_Kel3.Controllers
                 responseModel.status = 500;
             }
             return responseModel;
+        }
+        internal bool CheckKlasifikasi(string nama_klasifikasi)
+        {
+            throw new NotImplementedException();
         }
 
         [HttpPost("[controller]/UpdateKlasifikasiPelatihan")]

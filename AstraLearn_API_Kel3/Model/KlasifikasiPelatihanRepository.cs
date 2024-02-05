@@ -53,7 +53,6 @@ namespace AstraLearn_API_Kel3.Model
             return dataList;
         }
 
-
         public KlasifikasiPelatihanModel GetData(int id)
         {
             KlasifikasiPelatihanModel data = new KlasifikasiPelatihanModel();
@@ -84,16 +83,52 @@ namespace AstraLearn_API_Kel3.Model
             return data;
         }
 
+        public bool CheckKlasifikasi(string nama_klasifikasi)
+        {
+            try
+            {
+                // Query SQL untuk memeriksa keberadaan jenis paket dengan nama tertentu
+                string query = "SELECT COUNT(*) FROM tb_klasifikasi_pelatihan WHERE nama_klasifikasi = @nama_klasifikasi AND status = 1";
+
+                using (SqlCommand command = new SqlCommand(query, _connection))
+                {
+                    command.Parameters.AddWithValue("@nama_klasifikasi", nama_klasifikasi);
+                    _connection.Open();
+
+                    // Eksekusi query dan periksa hasilnya
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+            finally
+            {
+                _connection?.Close();
+            }
+        }
         public ResponseModel InsertData(KlasifikasiPelatihanModel data)
         {
             try
             {
+                // Cek apakah nama sudah ada sebelum menambahkannya
+                if (CheckKlasifikasi(data.nama_klasifikasi))
+                {
+                    Console.WriteLine("Nama Klasifikasi tersebut sudah ada.");
+                    response.status = 400; // Ubah status sesuai kebutuhan, misalnya 400 untuk Bad Request
+                    response.message = "Nama Klasifikasi tersebut sudah ada.";
+                    response.data = null;
+                    return response;
+                }
+
                 SqlCommand command = new SqlCommand("sp_InsertKlasifikasiPelatihan", _connection);
                 command.CommandType = System.Data.CommandType.StoredProcedure;
 
                 command.Parameters.AddWithValue("@nama_klasifikasi", data.nama_klasifikasi);
                 command.Parameters.AddWithValue("@deskripsi", data.deskripsi);
-
                 _connection.Open();
                 command.ExecuteNonQuery();
                 _connection.Close();
